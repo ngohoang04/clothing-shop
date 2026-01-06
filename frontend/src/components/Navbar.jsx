@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { assets } from '../assets/assets'
-// SỬA LỖI: Thêm Link vào dòng import này
 import { NavLink, Link } from 'react-router-dom'
+import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
 
     const [visible, setVisible] = React.useState(false);
+
+    // 1. Lấy thêm biến showSearch từ Context để biết đang Bật hay Tắt
+    const { setShowSearch, showSearch, getCartCount } = useContext(ShopContext);
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
@@ -41,7 +44,13 @@ const Navbar = () => {
             {/* Right Side Icons */}
             <div className='flex items-center gap-6'>
                 {/* Search Icon */}
-                <img src={assets.search_icon} alt="" className='w-5 cursor-pointer' />
+                {/* 2. Sửa logic: Set giá trị ngược lại với hiện tại (Đang bật -> Tắt, Đang tắt -> Bật) */}
+                <img
+                    onClick={() => setShowSearch(!showSearch)}
+                    src={assets.search_icon}
+                    alt=""
+                    className='w-5 cursor-pointer'
+                />
 
                 {/* Profile Group */}
                 <div className='group relative'>
@@ -58,12 +67,13 @@ const Navbar = () => {
 
                 <Link to='/cart' className='relative'>
                     <img src={assets.cart_icon} alt="" className='w-5 min-w-5' />
-                    <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>10</p>
+                    <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{getCartCount()}</p>
                 </Link>
 
                 {/* Mobile Menu Icon (Chỉ hiện trên mobile) */}
                 <img onClick={() => setVisible(true)} src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt="menu" />
             </div>
+
             {/* Mobile Menu Overlay */}
             <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? 'w-full ' : 'w-0'}`}>
                 <div className='flex flex-col text-gray-600'>
