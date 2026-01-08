@@ -13,6 +13,7 @@ const Product = () => {
     const [size, setSize] = useState('');
 
     const fetchProductData = async () => {
+        // Dùng map để duyệt và tìm sản phẩm, set state
         products.map((item) => {
             if (item._id === productId) {
                 setProductData(item);
@@ -24,7 +25,9 @@ const Product = () => {
 
     useEffect(() => {
         fetchProductData();
-    }, [productId, products]); // Thêm products vào dependency để đảm bảo chạy đúng khi data load xong
+        // Cuộn lên đầu trang mỗi khi chuyển sang sản phẩm khác (đổi productId)
+        window.scrollTo(0, 0);
+    }, [productId, products]);
 
     return productData ? (
         <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
@@ -36,7 +39,6 @@ const Product = () => {
                     <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full">
                         {productData.image.map((img, index) => (
                             <img
-                                // --- SỬA Ở ĐÂY: đổi image thành img ---
                                 onClick={() => setImage(img)}
                                 key={index}
                                 src={img}
@@ -54,7 +56,6 @@ const Product = () => {
                 <div className="flex-1">
                     <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
                     <div className="flex items-center gap-1 mt-2">
-                        {/* Đã sửa w-3 5 thành w-3.5 */}
                         <img src={assets.star_icon} alt="" className="w-3.5" />
                         <img src={assets.star_icon} alt="" className="w-3.5" />
                         <img src={assets.star_icon} alt="" className="w-3.5" />
@@ -89,6 +90,7 @@ const Product = () => {
                     </div>
                 </div>
             </div>
+
             <div className="mt-20">
                 <div className="flex">
                     <div className="border px-5 py-3 text-sm">Description</div>
@@ -99,11 +101,13 @@ const Product = () => {
                     <p>E-commerce websites typically display products or services along with detailed descriptions, images, prices, and any available variations (e.g., sizes, colors). Each product usually has its own dedicated page with relevant information.</p>
                 </div>
             </div>
-            {/* display related products */}
+
+            {/* Display related products */}
             <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
+
         </div>
     ) : (
-        <div className='opacity-0'>Loading...</div>
+        <div className='opacity-100 text-center py-10'>Loading...</div>
     );
 }
 
